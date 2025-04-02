@@ -1,54 +1,83 @@
 import pandas as pd
-import tkinter as tk
-from tkinter import filedialog, ttk, scrolledtext
+import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-class ExcelSummaryTool:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Excel Data Summary Tool")
-        
-        # Create load button
-        self.load_button = ttk.Button(self.root, text="Load Excel File", command=self.load_file)
-        self.load_button.pack(pady=10)
-        
-        # Create output area
-        self.output_area = scrolledtext.ScrolledText(self.root, width=100, height=25, wrap=tk.WORD)
-        self.output_area.pack(padx=10, pady=10)
-    
-    def load_file(self):
-        # Open file dialog to select Excel file
-        file_path = filedialog.askopenfilename(
-            title="Select Excel File",
-            filetypes=(("Excel Files", "*.xlsx *.xls"), ("All Files", "*.*"))
-        )
-        if file_path:
-            try:
-                # Read the Excel file
-                data = pd.read_excel(file_path)
-                summary = self.generate_summary(data)
-                self.output_area.delete(1.0, tk.END)  # Clear previous output
-                self.output_area.insert(tk.END, summary)
-            except Exception as e:
-                self.output_area.delete(1.0, tk.END)
-                self.output_area.insert(tk.END, f"Error loading file: {e}")
-    
-    def generate_summary(self, data):
-        # Generate a summary of the dataset
-        summary = []
-        summary.append("Summary of the Excel File:\n")
-        summary.append(f"Number of Rows: {data.shape[0]}")
-        summary.append(f"Number of Columns: {data.shape[1]}")
-        summary.append("\nColumn Information:\n")
-        
-        for col in data.columns:
-            summary.append(f" - {col}: {data[col].dtype}, Missing Values: {data[col].isnull().sum()}")
-        
-        summary.append("\nBasic Statistics for Numerical Columns:\n")
-        summary.append(data.describe().to_string())
-        
-        return "\n".join(summary)
+# Streamlit UI Setup
+st.title("Excel & CSV Data Analysis Tool")
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    tool = ExcelSummaryTool(root)
-    root.mainloop()
+# File Upload
+uploaded_file = st.file_uploader("Upload an Excel or CSV file", type=["xlsx", "xls", "csv"])
+
+if uploaded_file:
+    try:
+        # Read the uploaded file (CSV or Excel)
+        if uploaded_file.name.endswith('.csv'):
+            data = pd.read_csv(uploaded_file)
+        else:
+            data = pd.read_excel(uploaded_file)
+        
+        # Display dataset summary
+        st.write("### Summary of the File:")
+        st.write(f"**Number of Rows:** {data.shape[0]}")
+        st.write(f"**Number of Columns:** {data.shape[1]}")
+        
+        # Column Information
+        st.write("### Column Information:")
+        column_info = {
+            "Column Name": data.columns,
+            "Data Type": [data[col].dtype for col in data.columns],
+            "Missing Values": [data[col].isnull().sum() for col in data.columns]
+        }
+        st.dataframe(pd.DataFrame(column_info))
+        
+        # Display Basic Statistics for Numerical Columns
+        st.write("### Basic Statistics for Numerical Columns:")
+        st.dataframe(data.describe())
+        
+        # Detect Duplicate Values
+        st.write("### Duplicate Values:")
+        duplicate_rows = data[data.duplicated()]
+        st.write(f"Total Duplicates: {duplicate_rows.shape[0]}")
+        if not duplicate_rows.empty:
+            st.dataframe(duplicate_rows)
+        
+        # Correlation Matrix
+        st.write("### Correlation Matrix:")
+        numeric_data = data.select_dtypes(include=['number'])
+        if not numeric_data.empty:
+            fig, ax = plt.subplots()
+            sns.heatmap(numeric_data.corr(), annot=True, cmap='coolwarm', ax=ax)
+            st.pyplot(fig)
+        else:
+            st.write("No numerical columns found for correlation analysis.")
+        
+        # Data Filtering Options
+        st.write("### Filter Data:")
+        selected_column = st.selectbox("Select a column to filter:", data.columns)
+        unique_values = data[selected_column].unique()
+        selected_value = st.selectbox("Select a value:", unique_values)
+        filtered_data = data[data[selected_column] == selected_value]
+        st.write(f"Filtered Data (Where {selected_column} = {selected_value}):")
+        st.dataframe(filtered_data)
+        
+        # Data Visualization (Histograms & Boxplots)
+        st.write("### Data Visualization:")
+        selected_numeric_column = st.selectbox("Select a numerical column:", numeric_data.columns)
+        
+        if selected_numeric_column:
+            fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+            
+            # Histogram
+            sns.histplot(data[selected_numeric_column], bins=20, kde=True, ax=ax[0])
+            ax[0].set_title(f"Histogram of {selected_numeric_column}")
+            
+            # Boxplot
+            sns.boxplot(y=data[selected_numeric_column], ax=ax[1])
+            ax[1].set_title(f"Boxplot of {selected_numeric_column}")
+            
+            st.pyplot(fig)
+        
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
+
