@@ -1,59 +1,90 @@
-# Excel & CSV Data Analysis Tool
+# Excel and CSV Data Analyzer in Python
 
-This Streamlit application provides a user-friendly interface for basic data analysis of Excel (.xlsx, .xls) and CSV files. Simply upload your data and explore its key characteristics.
+A **Streamlit-based Excel and CSV data analysis tool** for quickly exploring datasets, checking data quality, calculating descriptive statistics, filtering records, and visualizing numerical columns.
+
+## Overview
+
+The application provides an interactive interface for exploratory data analysis (EDA) without requiring users to write pandas code for every dataset. Upload an Excel workbook or CSV file and inspect its structure, quality, distributions, and relationships.
 
 ## Features
 
-* **File Upload:** Easily upload your Excel or CSV files.
-* **Dataset Summary:** View the total number of rows and columns in your dataset.
-* **Column Information:** Get a detailed overview of each column, including:
-    * Column Name
-    * Data Type
-    * Number of Missing Values
-* **Basic Statistics:** Display descriptive statistics (count, mean, standard deviation, min, max, quartiles) for numerical columns.
-* **Duplicate Value Detection:** Identify and display duplicate rows within your dataset.
-* **Correlation Matrix:** Visualize the correlation between numerical columns using a heatmap.
-* **Data Filtering:** Filter your data based on unique values in a selected column.
-* **Data Visualization:** Generate histograms and boxplots for selected numerical columns to understand their distribution.
+- **Excel and CSV upload:** Work with `.xlsx`, `.xls`, and `.csv` datasets.
+- **Dataset overview:** View the number of rows and columns.
+- **Column profiling:** Inspect column names, data types, and missing-value counts.
+- **Descriptive statistics:** Calculate count, mean, standard deviation, minimum, maximum, and quartiles for numerical columns.
+- **Duplicate detection:** Identify duplicate records.
+- **Correlation analysis:** Explore relationships between numerical variables with a correlation heatmap.
+- **Interactive filtering:** Filter records using distinct values in a selected column.
+- **Data visualization:** Generate histograms and box plots to understand distributions and potential outliers.
 
-## How to Use
+## Technology Stack
 
-1.  **Upload File:** Click on the "Browse files" button and select your Excel (.xlsx, .xls) or CSV file.
-2.  **Explore Summary:** Once the file is uploaded, the application will automatically display a summary of your dataset, including the number of rows and columns.
-3.  **View Column Information:** Scroll down to see detailed information about each column, such as its data type and the count of missing values.
-4.  **Examine Basic Statistics:** For numerical columns, you'll find a table with basic statistical measures.
-5.  **Check for Duplicates:** The application will report the total number of duplicate rows and display them in a table if any are found.
-6.  **Analyze Correlations:** If your data contains numerical columns, a correlation matrix heatmap will be displayed, showing the relationships between these columns.
-7.  **Filter Data:**
-    * Select a column from the "Select a column to filter:" dropdown.
-    * Choose a specific value from the "Select a value:" dropdown to filter the data.
-    * The filtered data will be displayed below.
-8.  **Visualize Data:**
-    * Select a numerical column from the "Select a numerical column:" dropdown.
-    * A histogram (showing the distribution) and a boxplot (summarizing the distribution and identifying potential outliers) for the selected column will be displayed.
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| Streamlit | Interactive web interface |
+| pandas | Data loading and manipulation |
+| Matplotlib | Data visualization |
+| Seaborn | Statistical plots and heatmaps |
+| openpyxl | Excel workbook support |
 
-## Libraries Used
+## Run Locally
 
-* **pandas:** For data manipulation and analysis.
-* **streamlit:** For creating the interactive web application.
-* **matplotlib.pyplot:** For basic plotting.
-* **seaborn:** For enhanced data visualization, particularly the heatmap and statistical plots.
+### 1. Clone the repository
 
-## Getting Started (for running locally)
+```bash
+git clone https://github.com/priyanshukannaujiya/excel-file-analyzer-in-python.git
+cd excel-file-analyzer-in-python
+```
 
-1.  **Install Python:** Make sure you have Python installed on your system.
-2.  **Install Libraries:** Open your terminal or command prompt and run the following command to install the necessary libraries:
-    ```bash
-    pip install pandas streamlit matplotlib seaborn openpyxl
-    ```
-    *(Note: `openpyxl` is required for reading Excel files)*
-3.  **Save the Code:** Save the provided Python code as a `.py` file (e.g., `data_analyzer.py`).
-4.  **Run the Application:** Navigate to the directory where you saved the file in your terminal or command prompt and run the Streamlit application using the command:
-    ```bash
-    streamlit run data_analyzer.py
-    ```
-5.  **Open in Browser:** Streamlit will automatically open a new tab in your web browser where you can interact with the data analysis tool.
+### 2. Create and activate a virtual environment
 
-## Contributing
+```bash
+python -m venv .venv
+```
 
-Contributions are welcome! If you have any suggestions or find any issues, please feel free to open an issue or submit a pull request on the (hypothetical) repository.
+Windows:
+```bash
+.venv\Scripts\activate
+```
+
+macOS / Linux:
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install pandas streamlit matplotlib seaborn openpyxl
+```
+
+### 4. Launch the Streamlit application
+
+Run the Python entry-point file in this repository:
+
+```bash
+streamlit run <application-file>.py
+```
+
+Replace `<application-file>.py` with the actual Streamlit script filename.
+
+## Example Workflow
+
+1. Upload an Excel or CSV dataset.
+2. Review the dataset dimensions and column profile.
+3. Check missing values and duplicate records.
+4. Review descriptive statistics and the correlation heatmap.
+5. Filter records and inspect histograms or box plots.
+
+## Relevant Keywords
+
+Python data analysis, Excel analyzer, CSV analyzer, Streamlit dashboard, pandas, exploratory data analysis, data cleaning, data profiling, data visualization, correlation heatmap.
+
+## Author
+
+[Priyanshu Kannaujiya](https://github.com/priyanshukannaujiya)
+
+## Repository
+
+https://github.com/priyanshukannaujiya/excel-file-analyzer-in-python
